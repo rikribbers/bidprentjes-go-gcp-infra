@@ -3,8 +3,8 @@ terraform {
     organization = "rikribbers"
 
     workspaces {
-      name = "willyribbers-bidprentjes-go"
-    }
+      name = "bidprentjes-go-gcp-infra"
+    }   
   }
 
   required_providers {
