@@ -3,8 +3,13 @@ plugin "terraform" {
   preset  = "recommended"
 }
 
-plugin "random" {
-    enabled = true
-    source  = "terraform-linters/tflint-ruleset-random"
-    version = "0.1.0"
-} 
+plugin "google" {
+  enabled = true
+  version = "0.27.1"
+  source  = "github.com/terraform-linters/tflint-ruleset-google"
+}
+
+config {
+  module = true
+  force  = false
+}
