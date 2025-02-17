@@ -14,7 +14,6 @@ resource "google_cloud_run_v2_service" "default" {
         cpu_idle = true       # Enable CPU throttling when idle
       }
     }
-
     scaling {
       min_instance_count = 0
       max_instance_count = 1
