@@ -1,17 +1,17 @@
 resource "google_cloud_run_v2_service" "default" {
   name     = "bidprentjes-go"
   location = "europe-west4"
-  
+
   template {
     containers {
       image = "docker.io/rikribbers/bidprentjes-go:latest"
-      
+
       resources {
         limits = {
-          cpu    = "1000m"    # 1 vCPU
-          memory = "512Mi"    # Minimal memory
+          cpu    = "1000m" # 1 vCPU
+          memory = "512Mi" # Minimal memory
         }
-        cpu_idle = true       # Enable CPU throttling when idle
+        cpu_idle = true # Enable CPU throttling when idle
       }
     }
     scaling {

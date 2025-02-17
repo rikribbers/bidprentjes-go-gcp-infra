@@ -1,10 +1,11 @@
 terraform {
+  required_version = "~> 1.10"
   cloud {
     organization = "rikribbers"
 
     workspaces {
       name = "bidprentjes-go-gcp-infra"
-    }   
+    }
   }
 
   required_providers {
