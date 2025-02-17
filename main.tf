@@ -1,10 +1,10 @@
 terraform {
   cloud {
-    organization = "your-org-name"
+    organization = "rikribbers"
 
     workspaces {
-      name = "example-workspace"
-    }
+      name = "bidprentjes-go-gcp-infra"
+    }   
   }
 
   required_providers {
