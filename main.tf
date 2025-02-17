@@ -9,7 +9,7 @@ resource "google_cloud_run_v2_service" "default" {
       resources {
         limits = {
           cpu    = "1000m"    # 1 vCPU
-          memory = "256Mi"    # Minimal memory
+          memory = "512Mi"    # Minimal memory
         }
         cpu_idle = true       # Enable CPU throttling when idle
       }
