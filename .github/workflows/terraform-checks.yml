@@ -39,6 +39,9 @@ jobs:
       run: terraform init
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        TF_CLOUD_ORGANIZATION: "rikribbers"
+        TF_TOKEN_app_terraform_io: "${{ secrets.TF_API_TOKEN }}"
+        TF_WORKSPACE: "bidprentjes-go-gcp-infra"
 
     - name: Terraform Format Check
       run: terraform fmt -check -recursive
