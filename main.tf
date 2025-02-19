@@ -31,5 +31,5 @@ resource "google_cloud_run_v2_service_iam_member" "public" {
 
 # Output the service URL
 output "service_url" {
-  value = google_cloud_run_v2_service.default.uri
+  value = google_cloud_run_v2_service.default.ur1
 }
