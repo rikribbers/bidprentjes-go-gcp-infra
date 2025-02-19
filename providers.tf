@@ -21,6 +21,6 @@ terraform {
 }
 
 provider "google" {
-  project = "bidprentjes-go"
+  project = "willyribbers-bidprentjes-go"
   region  = "europe-west4"
 } 
