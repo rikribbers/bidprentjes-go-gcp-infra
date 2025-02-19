@@ -34,11 +34,6 @@ jobs:
       
     - name: Run TFLint
       run: tflint -f compact
-      
-    - name: Terraform Init
-      run: terraform init
-      env:
-        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
 
     - name: Terraform Format Check
       run: terraform fmt -check -recursive
