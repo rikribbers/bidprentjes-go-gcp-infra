@@ -1,7 +1,6 @@
 variable "app_version" {
   description = "The version tag for the bidprentjes-go container image"
   type        = string
-  default     = "v0.0.2"
 }
 
 variable "app_image" {
