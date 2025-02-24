@@ -1,0 +1,60 @@
+name: 'Terraform Checks'
+
+on:
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - '**.tf'
+      - '.github/workflows/terraform-checks.yml'
+
+jobs:
+  terraform-checks:
+    name: 'Terraform Lint and Security Checks'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: '1.10.0'  # Updated to match your required version
+
+    - name: Setup TFLint
+      uses: terraform-linters/setup-tflint@v4
+      with:
+        tflint_version: v0.50.0  # Specify TFLint version
+
+    - name: Init TFLint
+      run: tflint --init
+      
+    - name: Run TFLint
+      run: tflint -f compact
+      
+    - name: Terraform Init
+      run: terraform init
+      env:
+        GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        TF_CLOUD_ORGANIZATION: "rikribbers"
+        TF_TOKEN_app_terraform_io: "${{ secrets.TF_API_TOKEN }}"
+        TF_WORKSPACE: "bidprentjes-go-gcp-infra"
+
+    - name: Terraform Format Check
+      run: terraform fmt -check -recursive
+
+    - name: Terraform Validate
+      run: terraform validate
+
+    - name: Run checkov
+      uses: bridgecrewio/checkov-action@master
+      with:
+        directory: .
+        framework: terraform 
+        skip_check: CKV_GCP_19,CKV_GCP_29  # Optional: Skip specific checks
+        output_format: cli
+        download_external_modules: true
+        soft_fail: true  # Won't fail the build but will show warnings 
