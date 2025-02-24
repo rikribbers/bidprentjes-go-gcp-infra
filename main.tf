@@ -12,7 +12,7 @@ resource "google_cloud_run_v2_service" "default" {
   template {
     service_account = google_service_account.cloudrun_sa.email
     containers {
-      image = "docker.io/rikribbers/bidprentjes-go:latest"
+      image = "${var.app_image}:${var.app_version}"
 
       resources {
         limits = {
