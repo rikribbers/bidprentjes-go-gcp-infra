@@ -1,33 +1,15 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/debian
 {
-	"name": "GitHub Actions & Terraform",
+	"name": "Debian",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
-	"image": "mcr.microsoft.com/vscode/devcontainers/universal:linux",
+	"image": "mcr.microsoft.com/devcontainers/base:bullseye",
 	"features": {
-		"ghcr.io/devcontainers/features/terraform:1": {},
 		"ghcr.io/devcontainers/features/github-cli:1": {},
+		"ghcr.io/devcontainers/features/terraform:1": {},
 		"ghcr.io/dhoeric/features/google-cloud-cli:1": {}
-	},
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"github.vscode-github-actions",
-				"hashicorp.terraform",
-				"ms-azuretools.vscode-docker",
-				"redhat.vscode-yaml",
-				"googlecloudtools.cloudcode"
-			],
-			"settings": {
-				"terminal.integrated.defaultProfile.linux": "bash",
-				"terraform.languageServer": {
-					"enabled": true,
-					"args": []
-				}
-			}
-		}
-	},
-	"postCreateCommand": "terraform --version && gh --version && gcloud --version",
+	}
+
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 
@@ -38,5 +20,5 @@
 	// "customizations": {},
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	"remoteUser": "vscode"
+	// "remoteUser": "root"
 }
