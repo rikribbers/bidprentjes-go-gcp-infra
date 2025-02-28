@@ -16,7 +16,7 @@ resource "google_cloud_run_v2_service" "default" {
 
       resources {
         limits = {
-          cpu    = "1000m" # 1 vCPU
+          cpu    = "1000m"  # 1 vCPU
           memory = "2048Mi" # 2GB memory
         }
         cpu_idle = true # Enable CPU throttling when idle
@@ -44,7 +44,7 @@ resource "google_storage_bucket" "app_bucket" {
 # Grant the service account access to the bucket
 resource "google_storage_bucket_iam_member" "bucket_access" {
   bucket = google_storage_bucket.app_bucket.name
-  role   = "roles/storage.objectViewer"  # Adjust role as needed (objectViewer for read-only, objectUser for read-write)
+  role   = "roles/storage.objectViewer" # Adjust role as needed (objectViewer for read-only, objectUser for read-write)
   member = "serviceAccount:${google_service_account.cloudrun_sa.email}"
 }
 
@@ -97,7 +97,7 @@ resource "google_storage_bucket" "base_images_bucket" {
   name                        = "bidprentjes-go-base-images"
   location                    = "europe-west4"
   uniform_bucket_level_access = true
-  
+
   # Prevent public access
   public_access_prevention = "enforced"
 }
