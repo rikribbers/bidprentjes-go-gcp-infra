@@ -91,3 +91,18 @@ resource "google_storage_bucket_iam_member" "public_images_viewer" {
 output "public_images_url" {
   value = "https://storage.googleapis.com/${google_storage_bucket.images_bucket.name}"
 }
+
+# Create the private base images bucket
+resource "google_storage_bucket" "base_images_bucket" {
+  name                        = "bidprentjes-go-base-images"
+  location                    = "europe-west4"
+  uniform_bucket_level_access = true
+  
+  # Prevent public access
+  public_access_prevention = "enforced"
+}
+
+# Output the private bucket name
+output "base_images_bucket_name" {
+  value = google_storage_bucket.base_images_bucket.name
+}
