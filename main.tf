@@ -65,3 +65,29 @@ output "service_url" {
 output "bucket_name" {
   value = google_storage_bucket.app_bucket.name
 }
+
+# Create the public images bucket
+resource "google_storage_bucket" "images_bucket" {
+  name                        = "bidprentjes-go-public-images"
+  location                    = "europe-west4"
+  uniform_bucket_level_access = true
+
+  cors {
+    origin          = ["*"]
+    method          = ["GET", "HEAD", "OPTIONS"]
+    response_header = ["*"]
+    max_age_seconds = 3600
+  }
+}
+
+# Make bucket public
+resource "google_storage_bucket_iam_member" "public_images_viewer" {
+  bucket = google_storage_bucket.images_bucket.name
+  role   = "roles/storage.objectViewer"
+  member = "allUsers"
+}
+
+# Output the public bucket URL
+output "public_images_url" {
+  value = "https://storage.googleapis.com/${google_storage_bucket.images_bucket.name}"
+}
