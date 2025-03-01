@@ -44,7 +44,7 @@ resource "google_storage_bucket" "app_bucket" {
 # Grant the service account access to the bucket
 resource "google_storage_bucket_iam_member" "bucket_access" {
   bucket = google_storage_bucket.app_bucket.name
-  role   = "roles/storage.objectUser"  # Changed from objectViewer to objectUser for read-write access
+  role   = "roles/storage.objectUser" # Changed from objectViewer to objectUser for read-write access
   member = "serviceAccount:${google_service_account.cloudrun_sa.email}"
 }
 
