@@ -44,7 +44,7 @@ resource "google_storage_bucket" "app_bucket" {
 # Grant the service account access to the bucket
 resource "google_storage_bucket_iam_member" "bucket_access" {
   bucket = google_storage_bucket.app_bucket.name
-  role   = "roles/storage.objectViewer" # Adjust role as needed (objectViewer for read-only, objectUser for read-write)
+  role   = "roles/storage.objectUser" # Changed from objectViewer to objectUser for read-write access
   member = "serviceAccount:${google_service_account.cloudrun_sa.email}"
 }
 
@@ -64,45 +64,4 @@ output "service_url" {
 # Add bucket name to outputs
 output "bucket_name" {
   value = google_storage_bucket.app_bucket.name
-}
-
-# Create the public images bucket
-resource "google_storage_bucket" "images_bucket" {
-  name                        = "bidprentjes-go-public-images"
-  location                    = "europe-west4"
-  uniform_bucket_level_access = true
-
-  cors {
-    origin          = ["*"]
-    method          = ["GET", "HEAD", "OPTIONS"]
-    response_header = ["*"]
-    max_age_seconds = 3600
-  }
-}
-
-# Make bucket public
-resource "google_storage_bucket_iam_member" "public_images_viewer" {
-  bucket = google_storage_bucket.images_bucket.name
-  role   = "roles/storage.objectViewer"
-  member = "allUsers"
-}
-
-# Output the public bucket URL
-output "public_images_url" {
-  value = "https://storage.googleapis.com/${google_storage_bucket.images_bucket.name}"
-}
-
-# Create the private base images bucket
-resource "google_storage_bucket" "base_images_bucket" {
-  name                        = "bidprentjes-go-base-images"
-  location                    = "europe-west4"
-  uniform_bucket_level_access = true
-
-  # Prevent public access
-  public_access_prevention = "enforced"
-}
-
-# Output the private bucket name
-output "base_images_bucket_name" {
-  value = google_storage_bucket.base_images_bucket.name
 }
