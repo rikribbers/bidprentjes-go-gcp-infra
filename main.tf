@@ -17,7 +17,7 @@ resource "google_cloud_run_v2_service" "default" {
       resources {
         limits = {
           cpu    = "1000m"  # 1 vCPU
-          memory = "2048Mi" # 2GB memory
+          memory = "1536Mi" # 1.5GB memory
         }
         cpu_idle = true # Enable CPU throttling when idle
       }
@@ -25,6 +25,11 @@ resource "google_cloud_run_v2_service" "default" {
       env {
         name  = "STORAGE_BUCKET"
         value = google_storage_bucket.app_bucket.name
+      }
+
+      env {
+        name  = "GIN_MODE"
+        value = "release"
       }
     }
     scaling {
