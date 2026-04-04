@@ -1,0 +1,76 @@
+name: Terraform PR Plan
+
+on:
+  pull_request:
+    paths:
+      - "infra/**"
+      - ".github/workflows/terraform-pr-plan.yml"
+
+jobs:
+  terraform-pr-checks:
+    runs-on: ubuntu-latest
+
+    env:
+      TF_CLOUD_ORGANIZATION: rikribbers
+      TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+      TF_WORKSPACE: bidprentjes-go-gcp-infra
+      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      #TF_TOKEN_app_terraform_io: "${{ secrets.TF_API_TOKEN }}"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+#        with:
+#          terraform_version: 1.6.6
+
+      # -------------------------
+      # Formatting
+      # -------------------------
+      - name: Terraform Format Check
+        working-directory: infra
+        run: terraform fmt -check -recursive
+
+      # -------------------------
+      # Validation
+      # -------------------------
+      - name: Terraform Validate
+        working-directory: infra
+        run: terraform validate
+
+      # -------------------------
+      # TFLint (with GCP rules)
+      # -------------------------
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Setup TFLint Plugins
+        working-directory: infra
+        run: tflint --init
+
+      - name: Run TFLint
+        working-directory: infra
+        run: tflint --recursive
+
+      - name: Run checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: infra
+          framework: terraform 
+          skip_check: CKV_GCP_19,CKV_GCP_29  # Optional: Skip specific checks
+          output_format: cli
+          download_external_modules: true
+          soft_fail: fail  # Won't fail the build but will show warnings
+
+      # -------------------------
+      # Terraform Cloud Plan
+      # -------------------------
+      - name: Terraform Init
+        working-directory: infra
+        run: terraform init
+
+      - name: Terraform Plan (TFC)
+        working-directory: infra
+        run: terraform plan -input=false
