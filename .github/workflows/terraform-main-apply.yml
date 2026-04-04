@@ -1,0 +1,82 @@
+name: Terraform Main Apply
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "infra/**"
+      - ".github/workflows/terraform-main-apply.yml"
+
+jobs:
+  terraform-apply:
+    runs-on: ubuntu-latest
+
+    env:
+      TF_CLOUD_ORGANIZATION: rikribbers
+      TF_WORKSPACE: bidprentjes-go-gcp-infra
+      GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+      TF_TOKEN_app_terraform_io: "${{ secrets.TF_API_TOKEN }}"
+
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # -------------------------
+      # Formatting
+      # -------------------------
+      - name: Terraform Format Check
+        working-directory: infra
+        run: terraform fmt -check -recursive
+
+      # -------------------------
+      # TFLint (GCP)
+      # -------------------------
+      - name: Install TFLint
+        run: |
+          curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
+
+      - name: Setup TFLint Plugins
+        working-directory: infra
+        run: tflint --init
+
+      - name: Run TFLint
+        working-directory: infra
+        run: tflint --recursive
+
+      - name: Run checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: infra
+          framework: terraform 
+          skip_check: CKV_GCP_19,CKV_GCP_29,CKV_GCP_114,CKV_GCP_78,CKV_GCP_62 # Optional: Skip specific checks
+          output_format: cli
+          download_external_modules: true
+          soft_fail: fail  # Won't fail the build but will show warnings
+
+      - name: Terraform Init
+        working-directory: infra
+        run: terraform init
+
+      # -------------------------
+      # Validation
+      # -------------------------
+      - name: Terraform Validate
+        working-directory: infra
+        run: terraform validate
+
+      # -------------------------
+      # Terraform Cloud Plan + Apply
+      # -------------------------
+      
+      - name: Terraform Plan
+        working-directory: infra
+        run: terraform plan -input=false -out=tfplan
+
+#      - name: Terraform Apply
+#        working-directory: infra
+#        run: terraform apply -input=false tfplan
