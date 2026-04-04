@@ -47,6 +47,7 @@ jobs:
       - name: Run TFLint
         working-directory: infra
         run: tflint --recursive
+
       - name: Run checkov
         uses: bridgecrewio/checkov-action@master
         with:
@@ -70,7 +71,7 @@ jobs:
       - name: Terraform Validate
         working-directory: infra
         run: terraform validate
-        
+
       - name: Terraform Plan
         working-directory: infra
         run: terraform plan -input=false -out=tfplan

@@ -10,6 +10,5 @@ plugin "google" {
 }
 
 config {
-  module = true
   force  = false
 }
