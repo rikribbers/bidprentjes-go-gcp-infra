@@ -1,5 +1,5 @@
 terraform {
-  required_version = "~> 1.10"
+  required_version = "~> 1.14"
   cloud {
     organization = "rikribbers"
 
@@ -21,6 +21,6 @@ terraform {
 }
 
 provider "google" {
-  project = "willyribbers-bidprentjes-go"
-  region  = "europe-west4"
+  project = var.gcp_project_name
+  region  = var.gcp_default_region
 } 
