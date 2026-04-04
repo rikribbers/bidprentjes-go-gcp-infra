@@ -39,13 +39,10 @@ jobs:
         run: |
           curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-      - name: Setup TFLint Plugins
-        working-directory: infra
-        run: tflint --call_module_type=all --init
 
       - name: Run TFLint
         working-directory: infra
-        run: tflint --call_module_type=all --recursive
+        run: tflint --recursive
 
       - name: Run checkov
         uses: bridgecrewio/checkov-action@master
