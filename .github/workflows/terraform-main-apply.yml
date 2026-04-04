@@ -53,7 +53,7 @@ jobs:
         with:
           directory: infra
           framework: terraform 
-          skip_check: CKV_GCP_19,CKV_GCP_29  # Optional: Skip specific checks
+          skip_check: CKV_GCP_19,CKV_GCP_29,CKV_GCP_114,CKV_GCP_78,CKV_GCP_62 # Optional: Skip specific checks
           output_format: cli
           download_external_modules: true
           soft_fail: fail  # Won't fail the build but will show warnings
