@@ -41,11 +41,11 @@ jobs:
 
       - name: Setup TFLint Plugins
         working-directory: infra
-        run: tflint --init
+        run: tflint --call_module_type=all --init
 
       - name: Run TFLint
         working-directory: infra
-        run: tflint --recursive
+        run: tflint --call_module_type=all --recursive
 
       - name: Run checkov
         uses: bridgecrewio/checkov-action@master
