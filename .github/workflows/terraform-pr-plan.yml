@@ -33,13 +33,6 @@ jobs:
         run: terraform fmt -check -recursive
 
       # -------------------------
-      # Validation
-      # -------------------------
-      - name: Terraform Validate
-        working-directory: infra
-        run: terraform validate
-
-      # -------------------------
       # TFLint (with GCP rules)
       # -------------------------
       - name: Install TFLint
@@ -70,6 +63,13 @@ jobs:
       - name: Terraform Init
         working-directory: infra
         run: terraform init
+
+      # -------------------------
+      # Validation
+      # -------------------------
+      - name: Terraform Validate
+        working-directory: infra
+        run: terraform validate
 
       - name: Terraform Plan (TFC)
         working-directory: infra
