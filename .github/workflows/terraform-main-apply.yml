@@ -74,6 +74,6 @@ jobs:
         working-directory: infra
         run: terraform plan -input=false
 
-#      - name: Terraform Apply
-#        working-directory: infra
-#        run: terraform apply -input=false
+      - name: Terraform Apply (TCF)
+        working-directory: infra
+        run: terraform apply -input=false
