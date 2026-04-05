@@ -39,17 +39,17 @@ resource "google_cloud_run_v2_service" "default" {
   }
 }
 
-# Create the storage bucket
+# Create the original storage bucket (private for Cloud Run)
 resource "google_storage_bucket" "app_bucket" {
   name                        = "bidprentjes-go-storage"
   location                    = "europe-west4"
   uniform_bucket_level_access = true
 }
 
-# Grant the service account access to the bucket
+# Grant the service account access to the original bucket
 resource "google_storage_bucket_iam_member" "bucket_access" {
   bucket = google_storage_bucket.app_bucket.name
-  role   = "roles/storage.objectUser" # Changed from objectViewer to objectUser for read-write access
+  role   = "roles/storage.objectUser"
   member = "serviceAccount:${google_service_account.cloudrun_sa.email}"
 }
 
@@ -61,12 +61,47 @@ resource "google_cloud_run_v2_service_iam_member" "public" {
   member   = "allUsers"
 }
 
-# Output the service URL
+# New public storage bucket for photos
+resource "random_id" "bucket_suffix" {
+  byte_length = 4
+}
+
+resource "google_storage_bucket" "photos_bucket" {
+  name                        = "${var.photos_bucket_name}-${random_id.bucket_suffix.hex}"
+  location                    = "europe-west4"
+  uniform_bucket_level_access = true
+
+  cors {
+    origin          = ["https://${var.domain_name}", "https://www.${var.domain_name}"]
+    method          = ["GET", "HEAD"]
+    response_header = ["*"]
+    max_age_seconds = 3600
+  }
+}
+
+# Grant public read access to the photos bucket
+resource "google_storage_bucket_iam_member" "photos_public_viewer" {
+  bucket = google_storage_bucket.photos_bucket.name
+  role   = "roles/storage.objectViewer"
+  member = "allUsers"
+}
+
+# Output for the Cloud Run service URL
 output "service_url" {
   value = google_cloud_run_v2_service.default.uri
 }
 
-# Add bucket name to outputs
-output "bucket_name" {
+# Output for the original bucket name
+output "app_bucket_name" {
   value = google_storage_bucket.app_bucket.name
+}
+
+# Output for the new photo bucket name
+output "photos_bucket_name" {
+  value = google_storage_bucket.photos_bucket.name
+}
+
+# Output for the CDN URL
+output "cdn_url" {
+  value = "https://${var.cdn_subdomain}.${var.domain_name}"
 }
