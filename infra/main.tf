@@ -62,12 +62,8 @@ resource "google_cloud_run_v2_service_iam_member" "public" {
 }
 
 # New public storage bucket for photos
-resource "random_id" "bucket_suffix" {
-  byte_length = 4
-}
-
 resource "google_storage_bucket" "photos_bucket" {
-  name                        = "${var.photos_bucket_name}-${random_id.bucket_suffix.hex}"
+  name                        = "${var.cdn_subdomain}.${var.domain_name}"
   location                    = "europe-west4"
   uniform_bucket_level_access = true
 
