@@ -7,48 +7,6 @@ resource "cloudflare_record" "cdn" {
   proxied = true
 }
 
-# Transform Rule: Rewrite URI to prepend bucket name
-resource "cloudflare_ruleset" "path_rewrite" {
-  zone_id     = var.cloudflare_zone_id
-  name        = "Rewrite GCS Path"
-  description = "Prepend bucket name to GCS requests"
-  kind        = "zone"
-  phase       = "http_request_transform"
-
-  rules {
-    action = "rewrite"
-    action_parameters {
-      uri {
-        path {
-          expression = "concat(\"/${google_storage_bucket.photos_bucket.name}\", http.request.uri.path)"
-        }
-      }
-    }
-    expression  = "http.host eq \"${var.cdn_subdomain}.${var.domain_name}\""
-    description = "Prepend /${google_storage_bucket.photos_bucket.name} to path"
-    enabled     = true
-  }
-}
-
-# Origin Rule: Override Host header to storage.googleapis.com
-resource "cloudflare_ruleset" "origin_override" {
-  zone_id     = var.cloudflare_zone_id
-  name        = "GCS Origin Host Override"
-  description = "Override host header for GCS"
-  kind        = "zone"
-  phase       = "http_request_origin"
-
-  rules {
-    action = "route"
-    action_parameters {
-      host_header = "storage.googleapis.com"
-    }
-    expression  = "http.host eq \"${var.cdn_subdomain}.${var.domain_name}\""
-    description = "Override host header to storage.googleapis.com"
-    enabled     = true
-  }
-}
-
 # Cache Rule: Cache Everything
 resource "cloudflare_ruleset" "cache_settings" {
   zone_id     = var.cloudflare_zone_id
