@@ -34,12 +34,6 @@ variable "domain_name" {
   type        = string
 }
 
-variable "photos_bucket_name" {
-  description = "Name of the public GCS bucket for photos"
-  type        = string
-  default     = "photos"
-}
-
 variable "cdn_subdomain" {
   description = "Subdomain for the CDN"
   type        = string
