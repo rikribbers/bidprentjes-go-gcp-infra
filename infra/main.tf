@@ -92,11 +92,6 @@ output "app_bucket_name" {
   value = google_storage_bucket.app_bucket.name
 }
 
-# Output for the new photo bucket name
-output "photos_bucket_name" {
-  value = google_storage_bucket.photos_bucket.name
-}
-
 # Output for the CDN URL
 output "cdn_url" {
   value = "https://${var.cdn_subdomain}.${var.domain_name}"
