@@ -2,7 +2,7 @@
 resource "cloudflare_record" "cdn" {
   zone_id = var.cloudflare_zone_id
   name    = var.cdn_subdomain
-  value   = "storage.googleapis.com"
+  content = "storage.googleapis.com"
   type    = "CNAME"
   proxied = true
 }
@@ -41,7 +41,7 @@ resource "cloudflare_ruleset" "origin_override" {
   rules {
     action = "route"
     action_parameters {
-      host_header_override = "storage.googleapis.com"
+      host_header = "storage.googleapis.com"
     }
     expression  = "http.host eq \"${var.cdn_subdomain}.${var.domain_name}\""
     description = "Override host header to storage.googleapis.com"
@@ -55,7 +55,7 @@ resource "cloudflare_ruleset" "cache_settings" {
   name        = "CDN Caching Rules"
   description = "Cache everything for the photo CDN"
   kind        = "zone"
-  phase       = "http_cache_settings"
+  phase       = "http_request_cache_settings"
 
   rules {
     action = "set_cache_settings"
