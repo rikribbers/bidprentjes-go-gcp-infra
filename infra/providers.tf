@@ -17,10 +17,18 @@ terraform {
       source  = "hashicorp/google"
       version = "~> 6"
     }
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "~> 4"
+    }
   }
 }
 
 provider "google" {
   project = var.gcp_project_name
   region  = var.gcp_default_region
-} 
+}
+
+provider "cloudflare" {
+  api_token = var.cloudflare_api_token
+}
