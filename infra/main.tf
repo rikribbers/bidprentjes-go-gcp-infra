@@ -31,6 +31,10 @@ resource "google_cloud_run_v2_service" "default" {
         name  = "GIN_MODE"
         value = "release"
       }
+      env {
+        name  = "CDN_BASE_URL"
+        value = "${var.cdn_subdomain}.${var.domain_name}"
+      }
     }
     scaling {
       min_instance_count = 0
