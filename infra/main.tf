@@ -33,7 +33,7 @@ resource "google_cloud_run_v2_service" "default" {
       }
       env {
         name  = "CDN_BASE_URL"
-        value = "${var.cdn_subdomain}.${var.domain_name}"
+        value = "https://${var.cdn_subdomain}.${var.domain_name}"
       }
     }
     scaling {
